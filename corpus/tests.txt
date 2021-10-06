@@ -1,0 +1,158 @@
+================================================================================
+Simple variable assignment
+================================================================================
+
+var foo = null
+
+--------------------------------------------------------------------------------
+
+(program
+  (declarationOrToken
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (literalValue)))))))
+
+================================================================================
+Simple string assignment
+================================================================================
+
+var foo = 'aaa'
+
+--------------------------------------------------------------------------------
+
+(program
+  (declarationOrToken
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (interpolableString)))))))
+
+================================================================================
+Multiline string assignment
+================================================================================
+
+var foo = '''aaa'''
+
+--------------------------------------------------------------------------------
+
+(program
+  (declarationOrToken
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (multilineString)))))))
+
+================================================================================
+Object assignment
+================================================================================
+
+var foo = {
+  name: 'hello'
+  location: true
+}
+
+--------------------------------------------------------------------------------
+
+(program
+  (declarationOrToken
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (object
+              (objectProperty
+                (identifier)
+                (expression
+                  (primaryExpression
+                    (interpolableString))))
+              (objectProperty
+                (identifier)
+                (expression
+                  (primaryExpression
+                    (literalValue)))))))))))
+
+================================================================================
+For loop
+================================================================================
+
+resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in storageAccounts: {
+  name: storageName
+  location: location
+  sku: {
+    name: storageSKU
+  }
+  kind: 'StorageV2'
+  properties: {
+    supportsHttpsTrafficOnly: true
+  }
+}]
+
+--------------------------------------------------------------------------------
+
+(program
+  (declarationOrToken
+    (declaration
+      (resourceDeclaration
+        (identifier)
+        (interpolableString)
+        (assignment)
+        (forExpression
+          (identifier)
+          (expression
+            (primaryExpression
+              (variableAccess
+                (identifier))))
+          (forBody
+            (expression
+              (primaryExpression
+                (object
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (variableAccess
+                          (identifier)))))
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (variableAccess
+                          (identifier)))))
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (object
+                          (objectProperty
+                            (identifier)
+                            (expression
+                              (primaryExpression
+                                (variableAccess
+                                  (identifier)))))))))
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (interpolableString))))
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (object
+                          (objectProperty
+                            (identifier)
+                            (expression
+                              (primaryExpression
+                                (literalValue)))))))))))))))))
