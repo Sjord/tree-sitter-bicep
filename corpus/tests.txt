@@ -7,7 +7,7 @@ var foo = null
 --------------------------------------------------------------------------------
 
 (program
-  (declarationOrToken
+  (decoratedDeclaration
     (declaration
       (variableDeclaration
         (identifier)
@@ -25,14 +25,15 @@ var foo = 'aaa'
 --------------------------------------------------------------------------------
 
 (program
-  (declarationOrToken
+  (decoratedDeclaration
     (declaration
       (variableDeclaration
         (identifier)
         (assignment)
         (expression
           (primaryExpression
-            (interpolableString)))))))
+            (interpolableString
+              (stringLiteral))))))))
 
 ================================================================================
 Multiline string assignment
@@ -43,7 +44,7 @@ var foo = '''aaa'''
 --------------------------------------------------------------------------------
 
 (program
-  (declarationOrToken
+  (decoratedDeclaration
     (declaration
       (variableDeclaration
         (identifier)
@@ -64,7 +65,7 @@ var foo = {
 --------------------------------------------------------------------------------
 
 (program
-  (declarationOrToken
+  (decoratedDeclaration
     (declaration
       (variableDeclaration
         (identifier)
@@ -76,7 +77,8 @@ var foo = {
                 (identifier)
                 (expression
                   (primaryExpression
-                    (interpolableString))))
+                    (interpolableString
+                      (stringLiteral)))))
               (objectProperty
                 (identifier)
                 (expression
@@ -102,11 +104,12 @@ resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in
 --------------------------------------------------------------------------------
 
 (program
-  (declarationOrToken
+  (decoratedDeclaration
     (declaration
       (resourceDeclaration
         (identifier)
-        (interpolableString)
+        (interpolableString
+          (stringLiteral))
         (assignment)
         (forExpression
           (identifier)
@@ -145,7 +148,8 @@ resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in
                     (identifier)
                     (expression
                       (primaryExpression
-                        (interpolableString))))
+                        (interpolableString
+                          (stringLiteral)))))
                   (objectProperty
                     (identifier)
                     (expression
@@ -156,3 +160,345 @@ resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in
                             (expression
                               (primaryExpression
                                 (literalValue)))))))))))))))))
+
+================================================================================
+Numbers
+================================================================================
+
+var myVar = 123
+var myVar2 = -454
+var mvVar3 = 0
+
+--------------------------------------------------------------------------------
+
+(program
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (literalValue))))))
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (literalValue))))))
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (literalValue)))))))
+
+================================================================================
+Booleans
+================================================================================
+
+var myVar = false
+var myVar2 = true
+
+--------------------------------------------------------------------------------
+
+(program
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (literalValue))))))
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (literalValue)))))))
+
+================================================================================
+Arrays
+================================================================================
+
+var myArray = [
+  5983
+  3923
+  -241
+]
+
+var myEmptyArray = [
+]
+
+var myMixedArray = [
+  myVariable
+  'hello!'
+  true
+  1255
+]
+
+--------------------------------------------------------------------------------
+
+(program
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (array
+              (expression
+                (primaryExpression
+                  (literalValue)))
+              (expression
+                (primaryExpression
+                  (literalValue)))
+              (expression
+                (primaryExpression
+                  (literalValue)))))))))
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (array))))))
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (array
+              (expression
+                (primaryExpression
+                  (variableAccess
+                    (identifier))))
+              (expression
+                (primaryExpression
+                  (interpolableString
+                    (stringLiteral))))
+              (expression
+                (primaryExpression
+                  (literalValue)))
+              (expression
+                (primaryExpression
+                  (literalValue))))))))))
+
+================================================================================
+Bicep format example
+================================================================================
+
+@minLength(3)
+@maxLength(11)
+param storagePrefix string
+
+param storageSKU string = 'Standard_LRS'
+param location string = resourceGroup().location
+
+var uniqueStorageName = '${storagePrefix}${uniqueString(resourceGroup().id)}'
+
+resource stg 'Microsoft.Storage/storageAccounts@2019-04-01' = {
+  name: uniqueStorageName
+  location: location
+  sku: {
+    name: storageSKU
+  }
+  kind: 'StorageV2'
+  properties: {
+    supportsHttpsTrafficOnly: true
+  }
+}
+
+module webModule './webApp.bicep' = {
+  name: 'webDeploy'
+  params: {
+    skuName: 'S1'
+    location: location
+  }
+}
+
+output storageEndpoint object = stg.properties.primaryEndpoints
+
+--------------------------------------------------------------------------------
+
+(program
+  (decoratedDeclaration
+    (decorator
+      (functionCall
+        (identifier)
+        (expression
+          (primaryExpression
+            (literalValue)))))
+    (decorator
+      (functionCall
+        (identifier)
+        (expression
+          (primaryExpression
+            (literalValue)))))
+    (declaration
+      (parameterDeclaration
+        (identifier)
+        (parameterType
+          (identifier)))))
+  (decoratedDeclaration
+    (declaration
+      (parameterDeclaration
+        (identifier)
+        (parameterType
+          (identifier))
+        (parameterDefaultValue
+          (assignment)
+          (expression
+            (primaryExpression
+              (interpolableString
+                (stringLiteral))))))))
+  (decoratedDeclaration
+    (declaration
+      (parameterDeclaration
+        (identifier)
+        (parameterType
+          (identifier))
+        (parameterDefaultValue
+          (assignment)
+          (expression
+            (memberExpression
+              (propertyAccess
+                (expression
+                  (primaryExpression
+                    (functionCall
+                      (identifier))))
+                (identifier))))))))
+  (decoratedDeclaration
+    (declaration
+      (variableDeclaration
+        (identifier)
+        (assignment)
+        (expression
+          (primaryExpression
+            (interpolableString
+              (interpolation
+                (expression
+                  (primaryExpression
+                    (variableAccess
+                      (identifier)))))
+              (interpolation
+                (expression
+                  (primaryExpression
+                    (functionCall
+                      (identifier)
+                      (expression
+                        (memberExpression
+                          (propertyAccess
+                            (expression
+                              (primaryExpression
+                                (functionCall
+                                  (identifier))))
+                            (identifier))))))))))))))
+  (decoratedDeclaration
+    (declaration
+      (resourceDeclaration
+        (identifier)
+        (interpolableString
+          (stringLiteral))
+        (assignment)
+        (object
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (variableAccess
+                  (identifier)))))
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (variableAccess
+                  (identifier)))))
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (object
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (variableAccess
+                          (identifier)))))))))
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (interpolableString
+                  (stringLiteral)))))
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (object
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (literalValue))))))))))))
+  (decoratedDeclaration
+    (declaration
+      (moduleDeclaration
+        (identifier)
+        (interpolableString
+          (stringLiteral))
+        (assignment)
+        (object
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (interpolableString
+                  (stringLiteral)))))
+          (objectProperty
+            (identifier)
+            (expression
+              (primaryExpression
+                (object
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (interpolableString
+                          (stringLiteral)))))
+                  (objectProperty
+                    (identifier)
+                    (expression
+                      (primaryExpression
+                        (variableAccess
+                          (identifier)))))))))))))
+  (decoratedDeclaration
+    (declaration
+      (outputDeclaration
+        (identifier)
+        (outputType
+          (identifier))
+        (assignment)
+        (expression
+          (memberExpression
+            (propertyAccess
+              (expression
+                (memberExpression
+                  (propertyAccess
+                    (expression
+                      (primaryExpression
+                        (variableAccess
+                          (identifier))))
+                    (identifier))))
+              (identifier))))))))
