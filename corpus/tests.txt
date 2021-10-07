@@ -318,3 +318,18 @@ var foo = '''hello'world'''
     (identifier)
     (assignment)
     (multilineString)))
+
+================================================================================
+String with dollar
+================================================================================
+
+var foo = 'about $3 fiddy'
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (interpolableString
+      (stringLiteral))))
