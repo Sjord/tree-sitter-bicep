@@ -381,3 +381,17 @@ var stringInString = 'abc${'def'}'
       (interpolation
         (interpolableString
           (stringLiteral))))))
+
+================================================================================
+Four quotes
+================================================================================
+
+var multilineExtraQuotes = ''''abc''''
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (multilineString)))
