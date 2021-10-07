@@ -53,7 +53,7 @@ module.exports = grammar({
         literalValue: $ => choice("null", "true", "false", /-?[0-9]+/),
         identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/, // TODO support unicode, namespaces
         object: $ => seq('{', repeat(choice($.objectProperty, $.resourceDeclaration)), '}'),
-        objectProperty: $ => seq($.identifier, ':', $._expression),
+        objectProperty: $ => seq(choice($.identifier, $.interpolableString), ':', $._expression),
         ifCondition: $ => seq('if', $.parenthesizedExpression, $.object),
         array: $ => seq('[', repeat($._expression), ']'),
         interpolableString: $ => seq("'", optional($._stringContent), "'"), // TODO
@@ -96,7 +96,11 @@ module.exports = grammar({
         negation: $ => prec.right(110, seq('!', $._expression)),
         minus: $ => prec.right(110, seq('-', $._expression)),
 
-        comment: $ => /\/\/[^\r\n]*/
+        comment: $ => choice(/\/\/[^\r\n]*/, seq(
+            '/*',
+            /[^*]*\*+([^/*][^*]*\*+)*/,
+            '/'
+          ))
 
     }
 })
