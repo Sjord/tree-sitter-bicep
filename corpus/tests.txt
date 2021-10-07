@@ -348,3 +348,18 @@ var foo = '$3 fiddy'
     (assignment)
     (interpolableString
       (stringLiteral))))
+
+================================================================================
+String ending with dollar
+================================================================================
+
+var foo = 'mucho $'
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (interpolableString
+      (stringLiteral))))      
