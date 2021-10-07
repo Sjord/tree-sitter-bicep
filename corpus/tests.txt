@@ -304,3 +304,17 @@ var surrogate_codepoint = '\u{10437}'
     (assignment)
     (interpolableString
       (escapeSequence))))
+
+================================================================================
+Multiline string with quote
+================================================================================
+
+var foo = '''hello'world'''
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (multilineString)))
