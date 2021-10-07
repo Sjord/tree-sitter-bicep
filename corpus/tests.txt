@@ -362,4 +362,22 @@ var foo = 'mucho $'
     (identifier)
     (assignment)
     (interpolableString
-      (stringLiteral))))      
+      (stringLiteral))))
+
+================================================================================
+String in interpolation
+================================================================================
+
+var stringInString = 'abc${'def'}'
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (interpolableString
+      (stringLiteral)
+      (interpolation
+        (interpolableString
+          (stringLiteral))))))
