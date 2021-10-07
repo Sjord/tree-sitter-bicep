@@ -1,29 +1,29 @@
 module.exports = grammar({
     name: 'bicep',
     extras: $ => [
+        $.comment,
         /[\s]/
     ],
     conflicts: $ => [
         [$.variableAccess, $.functionCall]
     ],
     rules: {
-        program: $ => repeat($.decoratedDeclaration),
-        decoratedDeclaration: $ => seq(repeat($.decorator), choice($.declaration)), // or newline, or eof
-        declaration: $ => choice($.targetScope, $.variableDeclaration, $.resourceDeclaration, $.parameterDeclaration, $.outputDeclaration, $.moduleDeclaration, $.importDeclaration), // handle decorators 
-        targetScope: $ => seq("targetScope", $.assignment, $.expression),
-        parameterDeclaration: $ => seq("param", $.identifier, $.parameterType, optional($.parameterDefaultValue)),
-        parameterDefaultValue: $ => seq($.assignment, $.expression),
-        variableDeclaration: $ => seq("var", $.identifier, $.assignment, $.expression),
-        outputDeclaration: $ => seq("output", $.identifier, $.outputType, $.assignment, $.expression),
-        resourceDeclaration: $ => seq("resource", $.identifier, $.interpolableString, optional("existing"), $.assignment, choice($.ifCondition, $.object, $.forExpression)), 
-        parameterType: $ => $.identifier, // TODO split this up?
-        outputType: $ => $.identifier, // TODO split this up?
-        moduleDeclaration: $ => seq('module', $.identifier, $.interpolableString, $.assignment, choice($.ifCondition, $.object, $.forExpression)),
+        program: $ => repeat($._decoratedDeclaration),
+        _decoratedDeclaration: $ => seq(repeat($.decorator), choice($._declaration)), // or newline, or eof
+        _declaration: $ => choice($.targetScope, $.variableDeclaration, $.resourceDeclaration, $.parameterDeclaration, $.outputDeclaration, $.moduleDeclaration, $.importDeclaration), // handle decorators 
+        targetScope: $ => seq("targetScope", $.assignment, $._expression),
+        parameterDeclaration: $ => seq("param", $.identifier, $.type, optional($.parameterDefaultValue)),
+        parameterDefaultValue: $ => seq($.assignment, $._expression),
+        variableDeclaration: $ => seq("var", $.identifier, $.assignment, $._expression),
+        outputDeclaration: $ => seq("output", $.identifier, $.type, $.assignment, $._expression),
+        resourceDeclaration: $ => seq("resource", $.identifier, $.interpolableString, optional("existing"), $.assignment, choice($.ifCondition, $.object, $.for)),
+        moduleDeclaration: $ => seq('module', $.identifier, $.interpolableString, $.assignment, choice($.ifCondition, $.object, $.for)),
         importDeclaration: $ => seq('import', $.identifier, 'from', $.identifier, $.object),
+        type: $ => $.identifier,
 
         assignment: $ => "=",
-        expression: $ => choice(
-            $.primaryExpression,
+        _expression: $ => choice(
+            $._primaryExpression,
             $.memberExpression,
             $.multiplication,
             $.modulo,
@@ -45,55 +45,57 @@ module.exports = grammar({
             $.negation,
             $.minus
         ),
-        primaryExpression: $ => choice($.literalValue, $.interpolableString, $.multilineString, $.object, $.forExpression, $.array, $.parenthesizedExpression, $.functionCall, $.variableAccess),
+        _primaryExpression: $ => choice($.literalValue, $.interpolableString, $.multilineString, $.object, $.for, $.array, $.parenthesizedExpression, $.functionCall, $.variableAccess),
         variableAccess: $ => $.identifier,
-        functionCall: $ => seq($.identifier, '(', repeat($.expression), ')'),
-        parenthesizedExpression: $ => seq('(', $.expression, ')'),
+        functionCall: $ => seq($.identifier, '(', optional($.arguments), ')'),
+        arguments: $ => seq($._expression, repeat(seq(',', $._expression))),
+        parenthesizedExpression: $ => seq('(', $._expression, ')'),
         literalValue: $ => choice("null", "true", "false", /-?[0-9]+/),
         identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/, // TODO support unicode, namespaces
         object: $ => seq('{', repeat($.objectProperty), '}'),
-        objectProperty: $ => seq($.identifier, ':', $.expression),
+        objectProperty: $ => seq($.identifier, ':', $._expression),
         ifCondition: $ => seq('if', $.parenthesizedExpression, $.object),
-        array: $ => seq('[', repeat($.expression), ']'),
-        interpolableString: $ => seq("'", $._stringContent, "'"), // TODO
+        array: $ => seq('[', repeat($._expression), ']'),
+        interpolableString: $ => seq("'", optional($._stringContent), "'"), // TODO
         _stringContent: $ => repeat1(choice($.escapeSequence, $.interpolation, $.stringLiteral)), // TODO support empty stirngs
         escapeSequence: $ => choice('\\\\', '\\\'', '\\n', '\\r', '\\t', '\\$'), // TODO add unicode
-        interpolation: $ => seq('${', $.expression, '}'),
+        interpolation: $ => seq('${', $._expression, '}'),
         stringLiteral: $ => /[^'$]+/,
         multilineString: $ => seq("'''", /[^']*/, "'''"), // TODO
-        forExpression: $ => seq('[', 'for', optional(choice($.forVariableBlock, $.identifier)), 'in', $.expression, ':', $.forBody, ']'),
+        for: $ => seq('[', 'for', optional(choice($.forVariableBlock, $.identifier)), 'in', $._expression, ':', choice($.object, $.ifCondition), ']'),
         forVariableBlock: $ => seq('(', $.identifier, ',', $.identifier, ')'),
-        forBody: $ => $.expression, // TODO
         decorator: $ => seq('@', $.functionCall),
 
         memberExpression: $ => choice($.propertyAccess, $.arrayAccess),
-        propertyAccess: $ => prec.left(110, seq($.expression, '.', $.identifier)),
-        arrayAccess: $ => prec.left(110, seq($.expression, '[', $.expression, ']')),
+        propertyAccess: $ => prec.left(110, seq($._expression, '.', $.identifier)),
+        arrayAccess: $ => prec.left(110, seq($._expression, '[', $._expression, ']')),
 
-        multiplication: $ => prec.left(100, seq($.expression, '*', $.expression)),
-        modulo: $ => prec.left(100, seq($.expression, '%', $.expression)),
-        division: $ => prec.left(100, seq($.expression, '/', $.expression)),
+        multiplication: $ => prec.left(100, seq($._expression, '*', $._expression)),
+        modulo: $ => prec.left(100, seq($._expression, '%', $._expression)),
+        division: $ => prec.left(100, seq($._expression, '/', $._expression)),
 
-        addition: $ => prec.left(90, seq($.expression, '+', $.expression)),
-        subtraction: $ => prec.left(90, seq($.expression, '-', $.expression)),
+        addition: $ => prec.left(90, seq($._expression, '+', $._expression)),
+        subtraction: $ => prec.left(90, seq($._expression, '-', $._expression)),
 
-        greaterThan: $ => prec.left(80, seq($.expression, '>', $.expression)),
-        greaterThanOrEqual: $ => prec.left(80, seq($.expression, '>=', $.expression)),
-        lessThan: $ => prec.left(80, seq($.expression, '<', $.expression)),
-        lessThanOrEqual: $ => prec.left(80, seq($.expression, '<=', $.expression)),
+        greaterThan: $ => prec.left(80, seq($._expression, '>', $._expression)),
+        greaterThanOrEqual: $ => prec.left(80, seq($._expression, '>=', $._expression)),
+        lessThan: $ => prec.left(80, seq($._expression, '<', $._expression)),
+        lessThanOrEqual: $ => prec.left(80, seq($._expression, '<=', $._expression)),
 
-        equals: $ => prec.left(70, seq($.expression, '==', $.expression)),
-        notEquals: $ => prec.left(70, seq($.expression, '!=', $.expression)),
-        equalsInsensitive: $ => prec.left(70, seq($.expression, '=~', $.expression)),
-        notEqualsInsensitive: $ => prec.left(70, seq($.expression, '!~', $.expression)),
+        equals: $ => prec.left(70, seq($._expression, '==', $._expression)),
+        notEquals: $ => prec.left(70, seq($._expression, '!=', $._expression)),
+        equalsInsensitive: $ => prec.left(70, seq($._expression, '=~', $._expression)),
+        notEqualsInsensitive: $ => prec.left(70, seq($._expression, '!~', $._expression)),
 
-        logicalAnd: $ => prec.left(50, seq($.expression, '&&', $.expression)),
-        logicalOr: $ => prec.left(40, seq($.expression, '||', $.expression)),
-        conditionalExpression: $ => prec.right(35, seq($.expression, '?', $.expression, ':', $.expression)),
-        coalesce: $ => prec.left(30, seq($.expression, '??', $.expression)),
+        logicalAnd: $ => prec.left(50, seq($._expression, '&&', $._expression)),
+        logicalOr: $ => prec.left(40, seq($._expression, '||', $._expression)),
+        conditionalExpression: $ => prec.right(35, seq($._expression, '?', $._expression, ':', $._expression)),
+        coalesce: $ => prec.left(30, seq($._expression, '??', $._expression)),
 
-        negation: $ => prec.right(110, seq('!', $.expression)),
-        minus: $ => prec.right(110, seq('-', $.expression)),
+        negation: $ => prec.right(110, seq('!', $._expression)),
+        minus: $ => prec.right(110, seq('-', $._expression)),
+
+        comment: $ => /\/\/[^\r\n]*/
 
     }
 })
