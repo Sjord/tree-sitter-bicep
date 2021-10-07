@@ -267,3 +267,25 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2020-06-01' = {
             (identifier)
             (interpolableString
               (stringLiteral))))))))
+
+================================================================================
+Function call on property
+================================================================================
+
+var a = storageAccountVulnerabilityAssessments.listKeys().foo
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (memberExpression
+      (propertyAccess
+        (functionCall
+          (memberExpression
+            (propertyAccess
+              (variableAccess
+                (identifier))
+              (identifier))))
+        (identifier)))))

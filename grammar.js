@@ -47,7 +47,7 @@ module.exports = grammar({
         ),
         _primaryExpression: $ => choice($.literalValue, $.interpolableString, $.multilineString, $.object, $.for, $.array, $.parenthesizedExpression, $.functionCall, $.variableAccess),
         variableAccess: $ => $.identifier,
-        functionCall: $ => seq($.identifier, '(', optional($.arguments), ')'),
+        functionCall: $ => prec.left(110, seq($._expression, '(', optional($.arguments), ')')),
         arguments: $ => seq($._expression, repeat(seq(',', $._expression))),
         parenthesizedExpression: $ => seq('(', $._expression, ')'),
         literalValue: $ => choice("null", "true", "false", /-?[0-9]+/),
