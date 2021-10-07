@@ -289,3 +289,18 @@ var a = storageAccountVulnerabilityAssessments.listKeys().foo
                 (identifier))
               (identifier))))
         (identifier)))))
+
+================================================================================
+Unicode escape sequence
+================================================================================
+
+var surrogate_codepoint = '\u{10437}'
+
+--------------------------------------------------------------------------------
+
+(program
+  (variableDeclaration
+    (identifier)
+    (assignment)
+    (interpolableString
+      (escapeSequence))))
