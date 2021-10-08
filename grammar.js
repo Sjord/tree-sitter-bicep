@@ -11,17 +11,17 @@ module.exports = grammar({
         program: $ => repeat($._decoratedDeclaration),
         _decoratedDeclaration: $ => seq(repeat($.decorator), choice($._declaration)), // or newline, or eof
         _declaration: $ => choice($.targetScope, $.variableDeclaration, $.resourceDeclaration, $.parameterDeclaration, $.outputDeclaration, $.moduleDeclaration, $.importDeclaration), // handle decorators 
-        targetScope: $ => seq("targetScope", $.assignment, $._expression),
+        targetScope: $ => seq("targetScope", $._assignment, $._expression),
         parameterDeclaration: $ => seq("param", $.identifier, $.type, optional($.parameterDefaultValue)),
-        parameterDefaultValue: $ => seq($.assignment, $._expression),
-        variableDeclaration: $ => seq("var", $.identifier, $.assignment, $._expression),
-        outputDeclaration: $ => seq("output", $.identifier, $.type, $.assignment, $._expression),
-        resourceDeclaration: $ => seq("resource", $.identifier, $.string, optional("existing"), $.assignment, choice($.ifCondition, $.object, $.for)),
-        moduleDeclaration: $ => seq('module', $.identifier, $.string, $.assignment, choice($.ifCondition, $.object, $.for)),
+        parameterDefaultValue: $ => seq($._assignment, $._expression),
+        variableDeclaration: $ => seq("var", $.identifier, $._assignment, $._expression),
+        outputDeclaration: $ => seq("output", $.identifier, $.type, $._assignment, $._expression),
+        resourceDeclaration: $ => seq("resource", $.identifier, $.string, optional("existing"), $._assignment, choice($.ifCondition, $.object, $.for)),
+        moduleDeclaration: $ => seq('module', $.identifier, $.string, $._assignment, choice($.ifCondition, $.object, $.for)),
         importDeclaration: $ => seq('import', $.identifier, 'from', $.identifier, $.object),
         type: $ => $.identifier,
 
-        assignment: $ => "=",
+        _assignment: $ => "=",
         _expression: $ => choice(
             $._primaryExpression,
             $.memberExpression,

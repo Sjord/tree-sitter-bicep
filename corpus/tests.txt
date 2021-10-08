@@ -9,7 +9,6 @@ var foo = null
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (literalValue)))
 
 ================================================================================
@@ -23,7 +22,6 @@ var foo = 'aaa'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (stringLiteral))))
 
@@ -38,7 +36,6 @@ var foo = ''
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string)))
 
 ================================================================================
@@ -52,7 +49,6 @@ var foo = 'a\'a'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (stringLiteral)
       (escapeSequence)
@@ -69,8 +65,8 @@ var foo = '''aaa'''
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
-    (string (stringLiteral))))
+    (string
+      (stringLiteral))))
 
 ================================================================================
 Object assignment
@@ -86,7 +82,6 @@ var foo = {
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (object
       (objectProperty
         (identifier)
@@ -119,7 +114,6 @@ resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in
     (identifier)
     (string
       (stringLiteral))
-    (assignment)
     (for
       (identifier)
       (variableAccess
@@ -164,15 +158,12 @@ var mvVar3 = 0
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (literalValue))
   (variableDeclaration
     (identifier)
-    (assignment)
     (literalValue))
   (variableDeclaration
     (identifier)
-    (assignment)
     (literalValue)))
 
 ================================================================================
@@ -187,11 +178,9 @@ var myVar2 = true
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (literalValue))
   (variableDeclaration
     (identifier)
-    (assignment)
     (literalValue)))
 
 ================================================================================
@@ -219,18 +208,15 @@ var myMixedArray = [
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (array
       (literalValue)
       (literalValue)
       (literalValue)))
   (variableDeclaration
     (identifier)
-    (assignment)
     (array))
   (variableDeclaration
     (identifier)
-    (assignment)
     (array
       (variableAccess
         (identifier))
@@ -255,13 +241,11 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2020-06-01' = {
     (identifier)
     (string
       (stringLiteral))
-    (assignment)
     (object
       (resourceDeclaration
         (identifier)
         (string
           (stringLiteral))
-        (assignment)
         (object
           (objectProperty
             (identifier)
@@ -279,7 +263,6 @@ var a = storageAccountVulnerabilityAssessments.listKeys().foo
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (memberExpression
       (propertyAccess
         (functionCall
@@ -301,7 +284,6 @@ var surrogate_codepoint = '\u{10437}'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (escapeSequence))))
 
@@ -316,8 +298,8 @@ var foo = '''hello'world'''
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
-    (string (stringLiteral))))
+    (string
+      (stringLiteral))))
 
 ================================================================================
 String containing dollar
@@ -330,7 +312,6 @@ var foo = 'about $3 fiddy'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (stringLiteral))))
 
@@ -345,7 +326,6 @@ var foo = '$3 fiddy'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (stringLiteral))))
 
@@ -360,7 +340,6 @@ var foo = 'mucho $'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (stringLiteral))))
 
@@ -375,7 +354,6 @@ var stringInString = 'abc${'def'}'
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
     (string
       (stringLiteral)
       (interpolation
@@ -393,5 +371,5 @@ var multilineExtraQuotes = ''''abc''''
 (program
   (variableDeclaration
     (identifier)
-    (assignment)
-    (string (stringLiteral))))
+    (string
+      (stringLiteral))))
