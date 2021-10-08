@@ -24,7 +24,7 @@ module.exports = grammar({
         _assignment: $ => "=",
         _expression: $ => choice(
             $._primaryExpression,
-            $.memberExpression,
+            $._memberExpression,
             $.multiplication,
             $.modulo,
             $.division,
@@ -47,6 +47,7 @@ module.exports = grammar({
         ),
         _primaryExpression: $ => choice($.literalValue, $.string, alias($.multilineString, $.string), $.object, $.for, $.array, $.parenthesizedExpression, $.functionCall, $.variableAccess),
         variableAccess: $ => $.identifier,
+        localVariable: $ => $.identifier,
         functionCall: $ => prec.left(110, seq($._expression, '(', optional($._arguments), ')')),
         _arguments: $ => seq($.functionArgument, repeat(seq(',', $.functionArgument))),
         functionArgument: $ => $._expression,
@@ -56,7 +57,8 @@ module.exports = grammar({
         object: $ => seq('{', repeat(choice($.objectProperty, $.resourceDeclaration)), '}'),
         objectProperty: $ => seq(choice($.identifier, $.string), ':', $._expression),
         ifCondition: $ => seq('if', $.parenthesizedExpression, $.object),
-        array: $ => seq('[', repeat($._expression), ']'),
+        array: $ => seq('[', repeat($.arrayItem), ']'),
+        arrayItem: $ => $._expression,
 
         string: $ => seq("'", optional($._stringContent), "'"),
         _stringContent: $ => seq(repeat1(choice($.escapeSequence, $.interpolation, $.stringLiteral)), optional('$')),
@@ -65,12 +67,12 @@ module.exports = grammar({
         stringLiteral: $ => /([^'$\\]|\$+[^'{])+/,
         multilineString: $ => seq("'''", alias($.multilineStringLiteral, $.stringLiteral), /'''+/),
         multilineStringLiteral: $ => /([^']*('[^'])?(''[^'])?)+/,
-        for: $ => seq('[', 'for', optional(choice($.forVariableBlock, $.identifier)), 'in', $._expression, ':', $._forBody, ']'),
+        for: $ => seq('[', 'for', optional(choice($.forVariableBlock, $.localVariable)), 'in', $._expression, ':', $._forBody, ']'),
         _forBody: $ => choice($._expression, $.ifCondition),
-        forVariableBlock: $ => seq('(', $.identifier, ',', $.identifier, ')'),
+        forVariableBlock: $ => seq('(', $.localVariable, ',', $.localVariable, ')'),
         decorator: $ => seq('@', $.functionCall),
 
-        memberExpression: $ => choice($.propertyAccess, $.arrayAccess),
+        _memberExpression: $ => choice($.propertyAccess, $.arrayAccess),
         propertyAccess: $ => prec.left(110, seq($._expression, '.', $.identifier)),
         arrayAccess: $ => prec.left(110, seq($._expression, '[', $._expression, ']')),
 

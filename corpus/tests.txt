@@ -115,7 +115,8 @@ resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in
     (string
       (stringLiteral))
     (for
-      (identifier)
+      (localVariable
+        (identifier))
       (variableAccess
         (identifier))
       (object
@@ -209,21 +210,28 @@ var myMixedArray = [
   (variableDeclaration
     (identifier)
     (array
-      (literalValue)
-      (literalValue)
-      (literalValue)))
+      (arrayItem
+        (literalValue))
+      (arrayItem
+        (literalValue))
+      (arrayItem
+        (literalValue))))
   (variableDeclaration
     (identifier)
     (array))
   (variableDeclaration
     (identifier)
     (array
-      (variableAccess
-        (identifier))
-      (string
-        (stringLiteral))
-      (literalValue)
-      (literalValue))))
+      (arrayItem
+        (variableAccess
+          (identifier)))
+      (arrayItem
+        (string
+          (stringLiteral)))
+      (arrayItem
+        (literalValue))
+      (arrayItem
+        (literalValue)))))
 
 ================================================================================
 Nested resource
@@ -263,15 +271,13 @@ var a = storageAccountVulnerabilityAssessments.listKeys().foo
 (program
   (variableDeclaration
     (identifier)
-    (memberExpression
-      (propertyAccess
-        (functionCall
-          (memberExpression
-            (propertyAccess
-              (variableAccess
-                (identifier))
-              (identifier))))
-        (identifier)))))
+    (propertyAccess
+      (functionCall
+        (propertyAccess
+          (variableAccess
+            (identifier))
+          (identifier)))
+      (identifier))))
 
 ================================================================================
 Unicode escape sequence
