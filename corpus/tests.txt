@@ -7,9 +7,10 @@ var foo = null
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (literalValue)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (nullLiteral))))
 
 ================================================================================
 Simple string assignment
@@ -20,10 +21,11 @@ var foo = 'aaa'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
 
 ================================================================================
 Empty string assignment
@@ -34,9 +36,10 @@ var foo = ''
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string))))
 
 ================================================================================
 String escape sequence
@@ -47,12 +50,13 @@ var foo = 'a\'a'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral)
-      (escapeSequence)
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)
+        (escapeSequence)
+        (stringLiteral)))))
 
 ================================================================================
 Multiline string assignment
@@ -63,10 +67,11 @@ var foo = '''aaa'''
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
 
 ================================================================================
 Object assignment
@@ -80,16 +85,17 @@ var foo = {
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (object
-      (objectProperty
-        (identifier)
-        (string
-          (stringLiteral)))
-      (objectProperty
-        (identifier)
-        (literalValue)))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (object
+        (objectProperty
+          (identifier)
+          (string
+            (stringLiteral)))
+        (objectProperty
+          (identifier)
+          (booleanLiteral))))))
 
 ================================================================================
 For loop
@@ -110,41 +116,42 @@ resource sa 'Microsoft.Storage/storageAccounts@2019-06-01' = [for storageName in
 --------------------------------------------------------------------------------
 
 (program
-  (resourceDeclaration
-    (identifier)
-    (string
-      (stringLiteral))
-    (for
-      (localVariable
-        (identifier))
-      (variableAccess
-        (identifier))
-      (object
-        (objectProperty
-          (identifier)
-          (variableAccess
-            (identifier)))
-        (objectProperty
-          (identifier)
-          (variableAccess
-            (identifier)))
-        (objectProperty
-          (identifier)
-          (object
-            (objectProperty
-              (identifier)
-              (variableAccess
-                (identifier)))))
-        (objectProperty
-          (identifier)
-          (string
-            (stringLiteral)))
-        (objectProperty
-          (identifier)
-          (object
-            (objectProperty
-              (identifier)
-              (literalValue))))))))
+  (statement
+    (resourceDeclaration
+      (identifier)
+      (string
+        (stringLiteral))
+      (for
+        (localVariable
+          (identifier))
+        (variableAccess
+          (identifier))
+        (object
+          (objectProperty
+            (identifier)
+            (variableAccess
+              (identifier)))
+          (objectProperty
+            (identifier)
+            (variableAccess
+              (identifier)))
+          (objectProperty
+            (identifier)
+            (object
+              (objectProperty
+                (identifier)
+                (variableAccess
+                  (identifier)))))
+          (objectProperty
+            (identifier)
+            (string
+              (stringLiteral)))
+          (objectProperty
+            (identifier)
+            (object
+              (objectProperty
+                (identifier)
+                (booleanLiteral)))))))))
 
 ================================================================================
 Numbers
@@ -157,15 +164,18 @@ var mvVar3 = 0
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (literalValue))
-  (variableDeclaration
-    (identifier)
-    (literalValue))
-  (variableDeclaration
-    (identifier)
-    (literalValue)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (integerLiteral)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (integerLiteral)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (integerLiteral))))
 
 ================================================================================
 Booleans
@@ -177,12 +187,14 @@ var myVar2 = true
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (literalValue))
-  (variableDeclaration
-    (identifier)
-    (literalValue)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (booleanLiteral)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (booleanLiteral))))
 
 ================================================================================
 Arrays
@@ -207,31 +219,34 @@ var myMixedArray = [
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (array
-      (arrayItem
-        (literalValue))
-      (arrayItem
-        (literalValue))
-      (arrayItem
-        (literalValue))))
-  (variableDeclaration
-    (identifier)
-    (array))
-  (variableDeclaration
-    (identifier)
-    (array
-      (arrayItem
-        (variableAccess
-          (identifier)))
-      (arrayItem
-        (string
-          (stringLiteral)))
-      (arrayItem
-        (literalValue))
-      (arrayItem
-        (literalValue)))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (array
+        (arrayItem
+          (integerLiteral))
+        (arrayItem
+          (integerLiteral))
+        (arrayItem
+          (integerLiteral)))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (array)))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (array
+        (arrayItem
+          (variableAccess
+            (identifier)))
+        (arrayItem
+          (string
+            (stringLiteral)))
+        (arrayItem
+          (booleanLiteral))
+        (arrayItem
+          (integerLiteral))))))
 
 ================================================================================
 Nested resource
@@ -245,20 +260,21 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2020-06-01' = {
 --------------------------------------------------------------------------------
 
 (program
-  (resourceDeclaration
-    (identifier)
-    (string
-      (stringLiteral))
-    (object
-      (resourceDeclaration
-        (identifier)
-        (string
-          (stringLiteral))
-        (object
-          (objectProperty
-            (identifier)
-            (string
-              (stringLiteral))))))))
+  (statement
+    (resourceDeclaration
+      (identifier)
+      (string
+        (stringLiteral))
+      (object
+        (resourceDeclaration
+          (identifier)
+          (string
+            (stringLiteral))
+          (object
+            (objectProperty
+              (identifier)
+              (string
+                (stringLiteral)))))))))
 
 ================================================================================
 Function call on property
@@ -269,15 +285,16 @@ var a = storageAccountVulnerabilityAssessments.listKeys().foo
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (propertyAccess
-      (functionCall
-        (propertyAccess
-          (variableAccess
-            (identifier))
-          (identifier)))
-      (identifier))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (propertyAccess
+        (functionCall
+          (propertyAccess
+            (variableAccess
+              (identifier))
+            (identifier)))
+        (identifier)))))
 
 ================================================================================
 Unicode escape sequence
@@ -288,10 +305,11 @@ var surrogate_codepoint = '\u{10437}'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (escapeSequence))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (escapeSequence)))))
 
 ================================================================================
 Multiline string with quote
@@ -302,10 +320,11 @@ var foo = '''hello'world'''
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
 
 ================================================================================
 String containing dollar
@@ -316,10 +335,11 @@ var foo = 'about $3 fiddy'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
 
 ================================================================================
 String starting with dollar
@@ -330,10 +350,11 @@ var foo = '$3 fiddy'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
 
 ================================================================================
 String ending with dollar
@@ -344,10 +365,11 @@ var foo = 'mucho $'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
 
 ================================================================================
 String in interpolation
@@ -358,11 +380,11 @@ var stringInString = 'abc${'def'}'
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral)
-      (interpolation
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)
         (string
           (stringLiteral))))))
 
@@ -375,7 +397,38 @@ var multilineExtraQuotes = ''''abc''''
 --------------------------------------------------------------------------------
 
 (program
-  (variableDeclaration
-    (identifier)
-    (string
-      (stringLiteral))))
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
+
+================================================================================
+String literal with starting comment
+================================================================================
+
+var a = '/*'
+
+--------------------------------------------------------------------------------
+
+(program
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
+
+================================================================================
+Multiline string literal with starting comment
+================================================================================
+
+var a = '''/*'''
+
+--------------------------------------------------------------------------------
+
+(program
+  (statement
+    (variableDeclaration
+      (identifier)
+      (string
+        (stringLiteral)))))
