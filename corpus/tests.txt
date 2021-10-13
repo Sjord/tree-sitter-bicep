@@ -432,3 +432,32 @@ var a = '''/*'''
       (identifier)
       (string
         (stringLiteral)))))
+
+================================================================================
+Mixed array
+================================================================================
+
+
+var a = [
+    true
+    [
+      'inner'
+      false
+    ]
+  ]
+
+--------------------------------------------------------------------------------
+
+(program
+  (statement
+    (variableDeclaration
+      (identifier)
+      (array
+        (arrayItem (booleanLiteral))
+        (arrayItem
+          (array
+            (arrayItem
+              (string
+                (stringLiteral)))
+            (arrayItem
+              (booleanLiteral))))))))

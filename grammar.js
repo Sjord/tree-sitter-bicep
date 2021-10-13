@@ -44,7 +44,7 @@ module.exports = grammar({
         object: $ => seq('{', repeat(choice($.objectProperty, $.resourceDeclaration)), '}'),
         objectProperty: $ => seq(choice($.identifier, $.string), ':', $._expression),
         ifCondition: $ => seq('if', $.parenthesizedExpression, $.object),
-        array: $ => seq('[', repeat($.arrayItem), ']'),
+        array: $ => seq('[', repeat(seq($.arrayItem, "\n")), ']'),
         arrayItem: $ => $._expression,
 
         string: $ => seq("'", optional($._stringContent), "'"),
