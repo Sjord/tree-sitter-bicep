@@ -85,8 +85,7 @@ namespace ConsoleApp1
                 case FunctionCallSyntax f:
                     return $"(functionCall (variableAccess (identifier)) {string.Join(" ", f.Arguments.Select(ConvertAst))})";
                 case InstanceFunctionCallSyntax f:
-                    // TODO propertyAccess on BaseExpression
-                    return $"(functionCall {ConvertAst(f.BaseExpression)} {string.Join(" ", f.Arguments.Select(ConvertAst))})";
+                    return $"(functionCall (propertyAccess {ConvertAst(f.BaseExpression)} {ConvertAst(f.Name)}) {string.Join(" ", f.Arguments.Select(ConvertAst))})";
                 case OutputDeclarationSyntax o:
                     return $"(statement {string.Join("\n", o.Decorators.Select(ConvertAst))} (outputDeclaration (identifier) {ConvertAst(o.Type)} {ConvertAst(o.Value)}))";
                 case FunctionArgumentSyntax a:
@@ -98,7 +97,7 @@ namespace ConsoleApp1
                 case ObjectSyntax o:
                     return $"(object {string.Join(" ", o.Children.Select(ConvertAst))})";
                 case ObjectPropertySyntax p:
-                    return $"(objectProperty (identifier) {ConvertAst(p.Value)})";
+                    return $"(objectProperty {ConvertAst(p.Key)} {ConvertAst(p.Value)})";
                 case TypeSyntax t:
                     return "(type (identifier))";
                 case ForVariableBlockSyntax f:
