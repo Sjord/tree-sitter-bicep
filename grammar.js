@@ -76,9 +76,10 @@ module.exports = grammar({
             $._logicalOr,
             $._coalesce,
         ),            
-        _memberExpression: $ => choice($.propertyAccess, $.arrayAccess),
-        propertyAccess: $ => prec.left(110, seq($._expression, '.', $.identifier)),
-        arrayAccess: $ => prec.left(110, seq($._expression, '[', $._expression, ']')),
+        _memberExpression: $ => choice($.propertyAccess, $.arrayAccess, $.resourceAccess),
+        propertyAccess: $ => prec.left(120, seq($._expression, '.', $.identifier)),
+        arrayAccess: $ => prec.left(120, seq($._expression, '[', $._expression, ']')),
+        resourceAccess: $ => prec.left(120, seq($._expression, '::', $.identifier)),
 
         _multiplication: $ => prec.left(100, seq($._expression, '*', $._expression)),
         _modulo: $ => prec.left(100, seq($._expression, '%', $._expression)),
