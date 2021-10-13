@@ -1,0 +1,1 @@
+[Tree-sitter](https://tree-sitter.github.io/tree-sitter/) parser for [Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview)
